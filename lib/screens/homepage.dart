@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
 import '../model/product.dart';
+import 'favouritescreen.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -37,36 +38,68 @@ class _HomepageState extends State<Homepage> {
   bool aboutColor = false;
   bool profileColor = false;
   bool contactColor = false;
+  bool favColor = false;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-
+  User? user;
   Widget _buildUserAccountsDrawerHeader() {
-    List<UserModel> userModel = productprovider.getUserModelList;
-    return Column(
-        children: userModel.map((e) {
-      return UserAccountsDrawerHeader(
-        decoration: BoxDecoration(color: Colors.indigo),
-        accountName: Text(
-          e.UserName,
-          style: TextStyle(fontSize: 20),
-        ),
-        currentAccountPicture: CircleAvatar(
-          child: ClipOval(
-            child: e.UserImage == ""
-                ? Image.asset("assets/UserImage.png")
-                : Image.network(
-                    "${e.UserImage}",
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                  ),
+    if (user != null) {
+      List<UserModel> userModel = productprovider.getUserModelList;
+      return Column(
+          children: userModel.map((e) {
+        return UserAccountsDrawerHeader(
+          decoration: BoxDecoration(color: Colors.indigo),
+          accountName: Text(
+            e.UserName,
+            style: TextStyle(fontSize: 20),
           ),
-        ),
-        accountEmail: Text(
-          e.UserEmail,
-          style: TextStyle(fontSize: 17),
+          currentAccountPicture: CircleAvatar(
+            child: ClipOval(
+              child: e.UserImage == ""
+                  ? Image.asset("assets/UserImage.png")
+                  : Image.network(
+                      "${e.UserImage}",
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      width: double.infinity,
+                    ),
+            ),
+          ),
+          accountEmail: Text(
+            e.UserEmail,
+            style: TextStyle(fontSize: 17),
+          ),
+        );
+      }).toList());
+    } else {
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.2,
+        color: Colors.indigo,
+        child: UserAccountsDrawerHeader(
+          decoration: BoxDecoration(color: Colors.indigo),
+          accountName: MaterialButton(
+            child: Text(
+              "Sign In",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => login(),
+                ),
+              );
+            },
+          ),
+          currentAccountPicture: CircleAvatar(
+            child: ClipOval(child: Image.asset("assets/UserImage.png")),
+          ),
+          accountEmail: null,
         ),
       );
-    }).toList());
+    }
   }
 
   Widget buildMyDrawer() {
@@ -84,6 +117,7 @@ class _HomepageState extends State<Homepage> {
                 profileColor = false;
 
                 contactColor = false;
+                favColor = false;
               });
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -109,6 +143,7 @@ class _HomepageState extends State<Homepage> {
                 aboutColor = false;
                 profileColor = true;
                 contactColor = false;
+                favColor = false;
               });
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -133,7 +168,7 @@ class _HomepageState extends State<Homepage> {
                 cartColor = true;
                 aboutColor = false;
                 profileColor = false;
-
+                favColor = false;
                 contactColor = false;
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -152,6 +187,32 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           ListTile(
+            selected: cartColor,
+            onTap: () {
+              setState(() {
+                homeColor = false;
+                cartColor = false;
+                aboutColor = false;
+                profileColor = false;
+                favColor = true;
+                contactColor = false;
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => FavouriteScreen(),
+                  ),
+                );
+              });
+            },
+            leading: Icon(
+              Icons.favorite,
+              size: 35,
+            ),
+            title: Text(
+              "Favourites",
+              style: TextStyle(fontSize: 17),
+            ),
+          ),
+          ListTile(
             selected: aboutColor,
             onTap: () {
               setState(() {
@@ -159,7 +220,7 @@ class _HomepageState extends State<Homepage> {
                 cartColor = false;
                 aboutColor = true;
                 profileColor = false;
-
+                favColor = false;
                 contactColor = false;
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -186,6 +247,7 @@ class _HomepageState extends State<Homepage> {
                 aboutColor = false;
                 profileColor = false;
                 contactColor = true;
+                favColor = false;
               });
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -205,12 +267,14 @@ class _HomepageState extends State<Homepage> {
           ListTile(
             enabled: true,
             onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => login(),
-                ),
-              );
+              if (user != null) {
+                FirebaseAuth.instance.signOut();
+                // Navigator.of(context).pushReplacement(
+                //   MaterialPageRoute(
+                //     builder: (context) => login(),
+                //   ),
+                // );
+              }
             },
             leading: Icon(
               Icons.exit_to_app,
@@ -231,12 +295,12 @@ class _HomepageState extends State<Homepage> {
     List<Product> shirts = categoryprovider.getShirtList();
     List<Product> dresses = categoryprovider.getDressList();
     List<Product> shoes = categoryprovider.getShoeList();
-    List<Product> ties = categoryprovider.getTieList();
+    List<Product> tv = categoryprovider.getTieList();
     List<CategoryIcon> categoryIcon = categoryprovider.getCategoryIconList();
     List category = [
       dresses,
       pants,
-      ties,
+      tv,
       shoes,
       shirts,
     ];
@@ -292,8 +356,9 @@ class _HomepageState extends State<Homepage> {
                 );
               },
               child: Container(
+                // color: Colors.green,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       child: CircleAvatar(
@@ -406,6 +471,7 @@ class _HomepageState extends State<Homepage> {
                                 image: homeFeatures[index].image,
                                 name: homeFeatures[index].name,
                                 price: homeFeatures[index].price,
+                                isColor: false,
                               ),
                             ),
                           );
@@ -538,6 +604,7 @@ class _HomepageState extends State<Homepage> {
                             image: homeNewarchives[index].image,
                             name: homeNewarchives[index].name,
                             price: homeNewarchives[index].price,
+                            isColor: false,
                           ),
                         ),
                       );
@@ -635,6 +702,8 @@ class _HomepageState extends State<Homepage> {
     },
   ];
 
+  late String name, image;
+  late double price;
   @override
   Widget build(BuildContext context) {
     categoryprovider = Provider.of<CategoryProvider>(context);
@@ -650,11 +719,17 @@ class _HomepageState extends State<Homepage> {
     productprovider.getNewarchivesData();
     productprovider.getHomeFeatureData();
     productprovider.getHomeNewarchivesData();
-    productprovider.getUserData();
 
     height = MediaQuery.of(context).size.height;
     print("This is Max Radius${height * 0.1 / 2.1}");
-
+    try {
+      user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        productprovider.getUserData();
+      }
+    } catch (e) {
+      print("No User Logged In");
+    }
     return Scaffold(
       key: _key,
       appBar: AppBar(
@@ -698,24 +773,28 @@ class _HomepageState extends State<Homepage> {
             children: [
               Container(
                 margin: EdgeInsets.only(top: 10),
+                // color: Colors.green,
                 child: CarouselSlider.builder(
-                  itemCount: slider.length,
-                  options: CarouselOptions(
-                    height: 200.0,
-                    enlargeCenterPage: true,
-                    viewportFraction: 1.05,
-                    autoPlay: true,
-                  ),
-                  itemBuilder: (BuildContext context, int itemIndex,
-                          int pageViewIndex) =>
-                      Container(
-                    child: SingleProduct(
-                      name: slider[itemIndex]["name"].toString(),
-                      image: "${slider[itemIndex]["image"].toString()}",
-                      price: slider[itemIndex]["price"] as double,
+                    itemCount: slider.length,
+                    options: CarouselOptions(
+                      height: 200.0,
+                      enlargeCenterPage: true,
+                      viewportFraction: 1.05,
+                      autoPlay: true,
                     ),
-                  ),
-                ),
+                    itemBuilder: (BuildContext context, int itemIndex,
+                        int pageViewIndex) {
+                      name = slider[itemIndex]["name"].toString();
+                      image = slider[itemIndex]["image"].toString();
+                      price = slider[itemIndex]["price"] as double;
+                      return Container(
+                        child: SingleProduct(
+                          name: slider[itemIndex]["name"].toString(),
+                          image: "${slider[itemIndex]["image"].toString()}",
+                          price: slider[itemIndex]["price"] as double,
+                        ),
+                      );
+                    }),
               ),
               buildCategory(),
               buildFeature(),

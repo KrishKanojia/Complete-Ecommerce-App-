@@ -80,9 +80,11 @@ class ListProduct extends StatelessWidget {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (ctx) => DetailScreen(
-                                        image: e.image,
-                                        name: e.name,
-                                        price: e.price),
+                                      image: e.image,
+                                      name: e.name,
+                                      price: e.price,
+                                      isColor: false,
+                                    ),
                                   ),
                                 );
                               },
@@ -106,7 +108,7 @@ class ListProduct extends StatelessWidget {
                                         ),
                                         child: Image(
                                           image: NetworkImage("${e.image}"),
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.fitHeight,
                                         ),
                                       ),
                                     ),

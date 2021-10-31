@@ -14,6 +14,9 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'login.dart';
+import 'welcomescreen.dart';
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -274,7 +277,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userUid = "";
   void getUserUid() {
     User? myUser = FirebaseAuth.instance.currentUser;
-    userUid = myUser!.uid;
+    if (myUser != null) {
+      userUid = myUser.uid;
+    } else {
+      userUid = "";
+    }
   }
 
   @override
@@ -331,133 +338,191 @@ class _ProfileScreenState extends State<ProfileScreen> {
               : NotificationButton(),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("User").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: (FirebaseAuth.instance.currentUser != null)
+          ? StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection("User").snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
+                return ListView(
+                  children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
 
-              // String id = document.id;
-              // data["id"] = id;
-              if (data["UserId"] == userUid) {
-                print("yes");
-                print(data["UserName"]);
+                    // String id = document.id;
+                    // data["id"] = id;
+                    if (data["UserId"] == userUid) {
+                      print("yes");
+                      print(data["UserName"]);
 
-                userModel = UserModel(
-                  UserName: data["UserName"],
-                  UserAddress: data["UserAddress"],
-                  UserEmail: data["Email"],
-                  UserGender: data["UserGender"],
-                  UserPhoneNumber: data["PhoneNumber"],
-                  UserImage: data["UserImage"],
-                );
-                print("Getting image from source : ");
-                imageUrl = data["UserImage"];
-                //
-                return Container(
-                  width: double.infinity,
-                  child: Column(
-                    children: [
+                      userModel = UserModel(
+                        UserName: data["UserName"],
+                        UserAddress: data["UserAddress"],
+                        UserEmail: data["Email"],
+                        UserGender: data["UserGender"],
+                        UserPhoneNumber: data["PhoneNumber"],
+                        UserImage: data["UserImage"],
+                      );
+                      print("Getting image from source : ");
+                      imageUrl = data["UserImage"];
                       //
-                      //   child:
-                      Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            width: double.infinity,
-                            height: 230,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                      return Container(
+                        width: double.infinity,
+                        // color: Colors.blue,
+                        child: Column(
+                          children: [
+                            //
+                            //   child:
+                            Stack(
                               children: [
-                                CircleAvatar(
-                                  radius: 70,
-                                  child: ClipOval(
-                                    child: (_pickedImage == null)
-                                        ? (userModel.UserImage == "")
-                                            ? Image.asset(
-                                                "assets/UserImage.png")
-                                            : Image.network(
-                                                userModel.UserImage,
-                                                fit: BoxFit.cover,
-                                                height: double.infinity,
-                                                width: double.infinity,
-                                              )
-                                        : Image.file(
-                                            _pickedImage,
-                                            fit: BoxFit.cover,
-                                            height: double.infinity,
-                                            width: double.infinity,
-                                          ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  width: double.infinity,
+                                  height: 230,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 70,
+                                        backgroundColor: Colors.transparent,
+                                        child: ClipOval(
+                                          child: (_pickedImage == null)
+                                              ? (userModel.UserImage == "")
+                                                  ? Image.asset(
+                                                      "assets/UserImage.png")
+                                                  : Image.network(
+                                                      userModel.UserImage,
+                                                      fit: BoxFit.cover,
+                                                      height: double.infinity,
+                                                      width: double.infinity,
+                                                    )
+                                              : Image.file(
+                                                  _pickedImage,
+                                                  fit: BoxFit.cover,
+                                                  height: double.infinity,
+                                                  width: double.infinity,
+                                                ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                edit == true
+                                    ? Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 220, top: 180),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            myDialogBox();
+                                          },
+                                          child: CircleAvatar(
+                                            maxRadius: 30,
+                                            backgroundColor: Colors.white,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.black,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container()
                               ],
                             ),
-                          ),
-                          edit == true
-                              ? Padding(
-                                  padding: EdgeInsets.only(left: 220, top: 180),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      myDialogBox();
-                                    },
-                                    child: CircleAvatar(
-                                      maxRadius: 30,
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.black,
-                                        size: 30,
+                            // ),
+                            edit == true
+                                ? _buildTextFormFieldPart()
+                                : _buildContainerPart(),
+                            // : Container(),
+                            SizedBox(height: 20),
+                            edit == false
+                                ? ElevatedButton(
+                                    child: Text(
+                                      "Edit Profile",
+                                      style: TextStyle(
+                                        fontSize: 20,
                                       ),
                                     ),
-                                  ),
-                                )
-                              : Container()
-                        ],
-                      ),
-                      // ),
-                      edit == true
-                          ? _buildTextFormFieldPart()
-                          : _buildContainerPart(),
-                      // : Container(),
-                      SizedBox(height: 20),
-                      edit == false
-                          ? ElevatedButton(
-                              child: Text(
-                                "Edit Profile",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                shadowColor: Colors.purple,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  edit = true;
-                                });
-                              },
-                            )
-                          : Container()
-                    ],
-                  ),
+                                    style: ElevatedButton.styleFrom(
+                                      shadowColor: Colors.purple,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        edit = true;
+                                      });
+                                    },
+                                  )
+                                : Container()
+                          ],
+                        ),
+                      );
+                    } else {
+                      print("Id doesn't Match");
+                      return Container();
+                    }
+                  }).toList(),
                 );
-              } else {
-                print("Id doesn't Match");
-                return Container();
-              }
-            }).toList(),
-          );
-        },
-      ),
+              },
+            )
+          : Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white70,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    color: Colors.white,
+                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.35,
+                          decoration: BoxDecoration(
+                            // color: Colors.blue,
+                            image: DecorationImage(
+                              image: AssetImage(
+                                "assets/undraw_Login_re_4vu2.png",
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          color: Colors.indigo,
+                          child: Text(
+                            "Sign In",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => WelcomeScreen(),
+                              ),
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }

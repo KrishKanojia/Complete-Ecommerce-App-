@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'detailscreen.dart';
+
 class SingleProduct extends StatelessWidget {
   String image;
   String name;
@@ -14,7 +16,19 @@ class SingleProduct extends StatelessWidget {
       ),
       margin: EdgeInsets.symmetric(horizontal: 10),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          print("Its Working");
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(
+                name: name,
+                image: image,
+                price: price,
+                isColor: false,
+              ),
+            ),
+          );
+        },
         child: Card(
           elevation: 0.0,
           shape: RoundedRectangleBorder(

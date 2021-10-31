@@ -19,26 +19,28 @@ class ProductProvider extends ChangeNotifier {
   Future<void> getUserData() async {
     List<UserModel> newList = [];
     User? currentUser = FirebaseAuth.instance.currentUser;
-    QuerySnapshot UserSnapshot =
-        await FirebaseFirestore.instance.collection("User").get();
+    if (currentUser != null) {
+      QuerySnapshot UserSnapshot =
+          await FirebaseFirestore.instance.collection("User").get();
 
-    UserSnapshot.docs.forEach(
-      (element) {
-        Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-        var local = currentUser!.uid;
-        if (local == data["UserId"]) {
-          userModel = UserModel(
-              UserAddress: data["UserAddress"],
-              UserName: data["UserName"],
-              UserEmail: data["Email"],
-              UserGender: data["UserGender"],
-              UserPhoneNumber: data["PhoneNumber"],
-              UserImage: data["UserImage"]);
-          newList.add(userModel);
-        }
-        UserModelList = newList;
-      },
-    );
+      UserSnapshot.docs.forEach(
+        (element) {
+          Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+          var local = currentUser.uid;
+          if (local == data["UserId"]) {
+            userModel = UserModel(
+                UserAddress: data["UserAddress"],
+                UserName: data["UserName"],
+                UserEmail: data["Email"],
+                UserGender: data["UserGender"],
+                UserPhoneNumber: data["PhoneNumber"],
+                UserImage: data["UserImage"]);
+            newList.add(userModel);
+          }
+          UserModelList = newList;
+        },
+      );
+    }
   }
 
   List<UserModel> get getUserModelList {

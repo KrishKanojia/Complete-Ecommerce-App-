@@ -145,7 +145,7 @@ class CategoryProvider extends ChangeNotifier {
     QuerySnapshot tieSnapshot = await FirebaseFirestore.instance
         .collection("category")
         .doc("5ozukHEKyOLEnSS3r93Q")
-        .collection("tie")
+        .collection("mobile")
         .get();
 
     tieSnapshot.docs.forEach(

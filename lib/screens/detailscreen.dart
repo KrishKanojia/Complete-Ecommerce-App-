@@ -1,22 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/provider/favourite_provider.dart';
 import 'package:ecommerce_app/screens/cartscreen.dart';
+import 'package:ecommerce_app/screens/signup.dart';
 import 'package:ecommerce_app/widget/notification_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/product_provider.dart';
 import 'homepage.dart';
+import 'login.dart';
 
 class DetailScreen extends StatefulWidget {
   late final name;
   late double price;
   late final image;
+  late bool isColor = false;
+  late String docId;
 
-  DetailScreen({required this.image, required this.name, required this.price});
+  DetailScreen({
+    required this.image,
+    required this.name,
+    required this.price,
+    required this.isColor,
+    this.docId = "",
+  });
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
 }
 
 late ProductProvider productProvider;
+late FavouriteProvider favouriteProvider;
 
 class _DetailScreenState extends State<DetailScreen> {
   int count = 1;
@@ -89,10 +103,111 @@ class _DetailScreenState extends State<DetailScreen> {
     }
   }
 
+  deletefavourite() {
+    // if (widget.docId != "") {
+    print("Doc Id ${widget.docId}");
+    if (widget.docId != "") {
+      setState(() {
+        favouriteProvider.deleteNews(widget.docId);
+        Navigator.of(context).pop();
+      });
+    }
+  }
+
+  showAlertDialog(BuildContext ctx) {
+    Widget continueButton = TextButton(
+      child: Text("SignUp"),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Signup(),
+          ),
+        );
+      },
+    );
+    Widget signin = TextButton(
+      child: Text("Signin"),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => login(),
+          ),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Warning"),
+      content: Text("Login or SignUp First"),
+      actions: [
+        continueButton,
+        signin,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  User? user;
+
+  checkUser({
+    required String name,
+    required double price,
+    required String image,
+    required String color,
+    required String size,
+  }) async {
+    if (user != null) {
+      setState(() {
+        // print("Single News ${widget.index.toString()}");
+
+        // widget.isColor = true;
+      });
+
+      var randomDoc = await FirebaseFirestore.instance
+          .collection("User")
+          .doc(user!.uid)
+          .collection("favourites")
+          .doc();
+
+      FirebaseFirestore.instance
+          .collection("User")
+          .doc(user!.uid)
+          .collection("favourites")
+          .doc(randomDoc.id)
+          .set({
+        "Image": image,
+        "Name": name,
+        "Price": price,
+        "Size": size,
+        "Color": color,
+        "DocId": randomDoc.id,
+      });
+      print("Data Uploaded");
+      favouriteProvider.getFavouriteData();
+    } else {
+      showAlertDialog(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     productProvider = Provider.of<ProductProvider>(context);
+    favouriteProvider = Provider.of<FavouriteProvider>(context);
 
+    favouriteProvider.getFavouriteData();
+    try {
+      user = FirebaseAuth.instance.currentUser;
+    } catch (e) {
+      print("No User Logged In");
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -101,6 +216,43 @@ class _DetailScreenState extends State<DetailScreen> {
           color: Colors.white,
         ),
         actions: [
+          widget.isColor == false
+              ? IconButton(
+                  icon: Icon(
+                    Icons.favorite_outline_outlined,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (user != null) {
+                      setState(() {
+                        getColor();
+                        getsize();
+                        widget.isColor = true;
+                        checkUser(
+                            name: widget.name,
+                            price: widget.price,
+                            image: widget.image,
+                            color: color,
+                            size: size);
+                        print("Added To favourites");
+                      });
+                    } else {
+                      showAlertDialog(context);
+                    }
+                  },
+                )
+              : IconButton(
+                  icon: Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      widget.isColor = false;
+                      deletefavourite();
+                    });
+                  },
+                ),
           NotificationButton(),
         ],
       ),
@@ -298,31 +450,35 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          getsize();
+                          if (user != null) {
+                            getsize();
 
-                          getColor();
-                          productProvider.getcheckOutModelData(
-                            name: widget.name,
-                            image: widget.image,
-                            color: color,
-                            size: size,
-                            quantity: count,
-                            price: widget.price,
-                            // index: myIndex,
-                          );
-                          productProvider.getCartData(
-                            name: widget.name,
-                            image: widget.image,
-                            color: color,
-                            size: size,
-                            quantity: count,
-                            price: widget.price,
-                          );
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (ctx) => CartScreen(),
-                            ),
-                          );
+                            getColor();
+                            productProvider.getcheckOutModelData(
+                              name: widget.name,
+                              image: widget.image,
+                              color: color,
+                              size: size,
+                              quantity: count,
+                              price: widget.price,
+                              // index: myIndex,
+                            );
+                            productProvider.getCartData(
+                              name: widget.name,
+                              image: widget.image,
+                              color: color,
+                              size: size,
+                              quantity: count,
+                              price: widget.price,
+                            );
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (ctx) => CartScreen(),
+                              ),
+                            );
+                          } else {
+                            showAlertDialog(context);
+                          }
                         },
                         child: Text(
                           "Add To Cart",

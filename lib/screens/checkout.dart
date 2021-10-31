@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'homepage.dart';
+import 'login.dart';
 
 class CheckOut extends StatefulWidget {
   @override
@@ -38,7 +39,63 @@ class _CheckOutState extends State<CheckOut> {
   late int index;
   User? user;
   double total = 0.0;
-  Widget _buildBottom() {
+
+  showAlertDialog(BuildContext ctx, dynamic e) {
+    Widget continueButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.of(ctx).pop();
+      },
+    );
+    Widget signin = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        print("Product Order!!!");
+        FirebaseFirestore.instance.collection("Order").doc(user!.uid).set({
+          "Product": productProvider.checkOutModelList
+              .map((c) => {
+                    "Product Name": c.name,
+                    "Product Price": c.price,
+                    "Product Quantity": c.quantity,
+                    "Product Image": c.image,
+                    "Product Color": c.color,
+                    "Product Size": c.size,
+                  })
+              .toList(),
+          "Total Price": total.toStringAsFixed(2),
+          "UserName": e.UserName,
+          "UserEmail": e.UserEmail,
+          "UserAddress": e.UserAddress,
+          "UserUid": user!.uid,
+        });
+        productProvider.clearCheckoutProduct();
+        productProvider.clearCartProduct();
+        productProvider.addNotification("Notification");
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => Homepage()));
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Are You Sure?"),
+      content: Text("Proceed to checkout?"),
+      actions: [
+        continueButton,
+        signin,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Widget _buildBottom(BuildContext context) {
     return Column(
         children: productProvider.UserModelList.map((e) {
       return Container(
@@ -50,32 +107,10 @@ class _CheckOutState extends State<CheckOut> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
+            child: Text("BUY"),
             onPressed: () {
               if (productProvider.getCheckOutModelList.isNotEmpty) {
-                print("Product Order!!!");
-                FirebaseFirestore.instance
-                    .collection("Order")
-                    .doc(user!.uid)
-                    .set({
-                  "Product": productProvider.checkOutModelList
-                      .map((c) => {
-                            "Product Name": c.name,
-                            "Product Price": c.price,
-                            "Product Quantity": c.quantity,
-                            "Product Image": c.image,
-                            "Product Color": c.color,
-                            "Product Size": c.size,
-                          })
-                      .toList(),
-                  "Total Price": total.toStringAsFixed(2),
-                  "UserName": e.UserName,
-                  "UserEmail": e.UserEmail,
-                  "UserAddress": e.UserAddress,
-                  "UserUid": user!.uid,
-                });
-                productProvider.clearCheckoutProduct();
-                productProvider.clearCartProduct();
-                productProvider.addNotification("Notification");
+                showAlertDialog(context, e);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -84,7 +119,6 @@ class _CheckOutState extends State<CheckOut> {
                 );
               }
             },
-            child: Text("BUY"),
           ));
     }).toList());
   }
@@ -138,7 +172,7 @@ class _CheckOutState extends State<CheckOut> {
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         height: 50,
         width: 150,
-        child: _buildBottom(),
+        child: _buildBottom(context),
       ),
       body: SafeArea(
         child: Column(

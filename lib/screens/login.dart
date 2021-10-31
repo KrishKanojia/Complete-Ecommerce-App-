@@ -58,9 +58,11 @@ class _loginState extends State<login> {
       final FormState? _form = _formKey.currentState;
       if (_form!.validate()) {
         try {
+          String _email = email.text.trim();
+          String emailtolower = _email.toLowerCase();
           UserCredential User = await FirebaseAuth.instance
               .signInWithEmailAndPassword(
-                  email: email.text, password: password.text);
+                  email: emailtolower, password: password.text);
           print("User Logged In" + User.user!.uid);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
