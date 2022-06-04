@@ -14,6 +14,7 @@ class DetailScreen extends StatefulWidget {
   late final name;
   late double price;
   late final image;
+  late final description;
   late bool isColor = false;
   late String docId;
 
@@ -23,6 +24,7 @@ class DetailScreen extends StatefulWidget {
     required this.price,
     required this.isColor,
     this.docId = "",
+    required this.description,
   });
 
   @override
@@ -163,6 +165,7 @@ class _DetailScreenState extends State<DetailScreen> {
     required String image,
     required String color,
     required String size,
+    required String description,
   }) async {
     if (user != null) {
       setState(() {
@@ -188,6 +191,7 @@ class _DetailScreenState extends State<DetailScreen> {
         "Price": price,
         "Size": size,
         "Color": color,
+        "productDescription": description,
         "DocId": randomDoc.id,
       });
       print("Data Uploaded");
@@ -233,6 +237,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             price: widget.price,
                             image: widget.image,
                             color: color,
+                            description: widget.description,
                             size: size);
                         print("Added To favourites");
                       });
@@ -262,7 +267,7 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               Center(
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                  margin: EdgeInsets.symmetric(horizontal: 2),
                   width: double.infinity,
                   height: 250,
                   child: ClipRRect(
@@ -289,12 +294,29 @@ class _DetailScreenState extends State<DetailScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text(
-                              "\$ ${widget.price}",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text: '${widget.price}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                    )),
+                                WidgetSpan(
+                                  child: Transform.translate(
+                                    offset: const Offset(2, -8),
+                                    child: Text(
+                                      '\$',
+                                      //superscript is usually smaller in size
+                                      textScaleFactor: 1,
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                )
+                              ]),
                             ),
                             Text(
                               "Description",
@@ -308,10 +330,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: MediaQuery.of(context).size.height * 0.25,
+                      margin: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        "It is a long established fact on of letters,tent here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncccident, sometimes on purpose (injected humour and the like",
+                        widget.description,
                         style: TextStyle(fontSize: 18),
                       ),
                     ),

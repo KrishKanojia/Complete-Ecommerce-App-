@@ -127,18 +127,17 @@ class ProductProvider extends ChangeNotifier {
 
   Future<void> getFeatureData() async {
     List<Product> newList = [];
-    QuerySnapshot featureSnapshot = await FirebaseFirestore.instance
-        .collection("product")
-        .doc("1UxSlsxnQjdlQc3q12H6")
-        .collection("featureproduct")
-        .get();
+    QuerySnapshot featureSnapshot =
+        await FirebaseFirestore.instance.collection("featureproduct").get();
 
     featureSnapshot.docs.forEach(
       (element) {
         featureData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productDescription"),
+        );
         newList.add(featureData);
       },
     );
@@ -163,7 +162,8 @@ class ProductProvider extends ChangeNotifier {
         homeFeatureData = Product(
             image: element.get("image"),
             name: element.get("name"),
-            price: element.get("price"));
+            price: element.get("price"),
+            description: element.get("productDescription"));
         newList.add(homeFeatureData);
       },
     );
@@ -180,18 +180,16 @@ class ProductProvider extends ChangeNotifier {
 
   Future<void> getNewarchivesData() async {
     List<Product> newList = [];
-    QuerySnapshot newarchiveSnapshot = await FirebaseFirestore.instance
-        .collection("product")
-        .doc("1UxSlsxnQjdlQc3q12H6")
-        .collection("newarchives")
-        .get();
+    QuerySnapshot newarchiveSnapshot =
+        await FirebaseFirestore.instance.collection("products").get();
 
     newarchiveSnapshot.docs.forEach(
       (element) {
         newarchiveData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+            image: element.get("productImage"),
+            name: element.get("productTitle"),
+            price: element.get("productPrice"),
+            description: element.get("productDescription"));
         newList.add(newarchiveData);
       },
     );
@@ -214,9 +212,11 @@ class ProductProvider extends ChangeNotifier {
     homeNewarchiveSnapshot.docs.forEach(
       (element) {
         homeNewarchiveData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productDescription"),
+        );
         newList.add(homeNewarchiveData);
       },
     );

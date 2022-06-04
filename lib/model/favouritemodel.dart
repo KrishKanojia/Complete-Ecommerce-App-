@@ -5,6 +5,7 @@ class FavouriteModel {
   late String color;
   late String size;
   late String docId;
+  late String description;
   FavouriteModel({
     required this.name,
     required this.image,
@@ -12,5 +13,6 @@ class FavouriteModel {
     required this.color,
     required this.size,
     required this.docId,
+    required this.description,
   });
 }

@@ -51,9 +51,11 @@ class CategoryProvider extends ChangeNotifier {
     pantSnapshot.docs.forEach(
       (element) {
         pantData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productTitle"),
+        );
         newList.add(pantData);
       },
     );
@@ -76,9 +78,11 @@ class CategoryProvider extends ChangeNotifier {
     shirtSnapshot.docs.forEach(
       (element) {
         shirtData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productTitle"),
+        );
         newList.add(shirtData);
       },
     );
@@ -101,9 +105,11 @@ class CategoryProvider extends ChangeNotifier {
     dressSnapshot.docs.forEach(
       (element) {
         dressData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productTitle"),
+        );
         newList.add(dressData);
       },
     );
@@ -126,9 +132,11 @@ class CategoryProvider extends ChangeNotifier {
     shoeSnapshot.docs.forEach(
       (element) {
         shoeData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productTitle"),
+        );
         newList.add(shoeData);
       },
     );
@@ -151,9 +159,11 @@ class CategoryProvider extends ChangeNotifier {
     tieSnapshot.docs.forEach(
       (element) {
         tieData = Product(
-            image: element.get("image"),
-            name: element.get("name"),
-            price: element.get("price"));
+          image: element.get("image"),
+          name: element.get("name"),
+          price: element.get("price"),
+          description: element.get("productTitle"),
+        );
         newList.add(tieData);
       },
     );

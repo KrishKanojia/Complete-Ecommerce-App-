@@ -333,53 +333,56 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(
-            left: 15,
-            right: 10,
-          ),
           width: MediaQuery.of(context).size.width,
           height: 60,
-          child: ListView.builder(
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 15.0),
             scrollDirection: Axis.horizontal,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: categoryIcon.length,
-            itemBuilder: (context, int index) => GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => ListProduct(
-                      isCategory: true,
-                      name: "${categoryIcon[index].name}",
-                      snapshot: category[index],
+            children: List.generate(
+              categoryIcon.length,
+              (index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => ListProduct(
+                          isCategory: true,
+                          name: "${categoryIcon[index].name}",
+                          snapshot: category[index],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    // color: Colors.green,
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          child: CircleAvatar(
+                            backgroundColor: Color(colors[index]),
+                            maxRadius: height * 0.1 / 2.1,
+                            child: Container(
+                              height: 40,
+                              width: double.infinity,
+                              child: Image(
+                                color: Colors.white,
+                                image: NetworkImage(
+                                  "${categoryIcon[index].image}",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
               },
-              child: Container(
-                // color: Colors.green,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      child: CircleAvatar(
-                        backgroundColor: Color(colors[index]),
-                        maxRadius: height * 0.1 / 2.1,
-                        child: Container(
-                          height: 40,
-                          width: double.infinity,
-                          child: Image(
-                            color: Colors.white,
-                            image: NetworkImage(
-                              "${categoryIcon[index].image}",
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
+
+            //
           ),
         ),
       ],
@@ -438,8 +441,8 @@ class _HomepageState extends State<Homepage> {
                   end: Alignment.centerRight,
                   colors: [Colors.purple, Colors.blue])),
           child: Container(
-            margin: EdgeInsets.only(left: 15),
             child: ListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               scrollDirection: Axis.horizontal,
               itemCount: homeFeatures.length,
               itemBuilder: (context, int index) => Container(
@@ -448,7 +451,7 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(right: 15),
-                      width: 120,
+                      width: 140,
                       height: 150,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -471,6 +474,7 @@ class _HomepageState extends State<Homepage> {
                                 image: homeFeatures[index].image,
                                 name: homeFeatures[index].name,
                                 price: homeFeatures[index].price,
+                                description: homeFeatures[index].description,
                                 isColor: false,
                               ),
                             ),
@@ -496,7 +500,7 @@ class _HomepageState extends State<Homepage> {
                                 child: Image(
                                   image:
                                       NetworkImage(homeFeatures[index].image),
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -604,6 +608,7 @@ class _HomepageState extends State<Homepage> {
                             image: homeNewarchives[index].image,
                             name: homeNewarchives[index].name,
                             price: homeNewarchives[index].price,
+                            description: homeNewarchives[index].description,
                             isColor: false,
                           ),
                         ),
@@ -646,7 +651,7 @@ class _HomepageState extends State<Homepage> {
                                   ),
                                 ),
                                 Text(
-                                  "\$ ${newarchives[index].price}",
+                                  "\$ ${homeNewarchives[index].price}",
                                   style: TextStyle(
                                     fontSize: 17,
                                     color: Colors.black,
@@ -714,7 +719,7 @@ class _HomepageState extends State<Homepage> {
     categoryprovider.getTieData();
     categoryprovider.getCategoryIconData();
 
-    productprovider = Provider.of<ProductProvider>(context);
+    productprovider = Provider.of<ProductProvider>(context, listen: true);
     productprovider.getFeatureData();
     productprovider.getNewarchivesData();
     productprovider.getHomeFeatureData();
@@ -739,7 +744,7 @@ class _HomepageState extends State<Homepage> {
           },
           icon: Icon(Icons.menu),
         ),
-        title: Text("Ecommerce App"),
+        title: Text("E-Bazar"),
         centerTitle: true,
         actions: [
           IconButton(

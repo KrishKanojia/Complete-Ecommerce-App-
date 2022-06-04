@@ -116,133 +116,142 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Form(
-              key: _formKey,
-              child: Stack(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 500,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Form(
+          key: _formKey,
+          child: Container(
+            margin: EdgeInsets.only(left: 10, right: 10),
+            height: size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(flex: 1),
+                Container(
+                  alignment: Alignment.center, // This is needed
+                  child: Image.asset(
+                    "assets/logo.png",
+                    fit: BoxFit.contain,
+                    width: 300,
+                  ),
+                ),
+                Text(
+                  "Register",
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.01),
+                MyTextFormField(
+                  Name: "UserName",
+                  controller: userName,
+                ),
+                SizedBox(height: size.height * 0.01),
+                MyTextFormField(
+                  Name: "Email",
+                  controller: email,
+                ),
+                SizedBox(height: size.height * 0.01),
+                PasswordTextFormField(
+                  name: "Password",
+                  controller: password,
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    setState(() {
+                      obserText = !obserText;
+                    });
+                  },
+                  obscureText: obserText,
+                ),
+                SizedBox(height: size.height * 0.01),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMale = !isMale;
+                    });
+                  },
+                  child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                      color: Colors.grey,
+                    )),
+                    child: Row(
                       children: [
                         Text(
-                          "Register",
+                          isMale == true ? "Male" : "Female",
                           style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        MyTextFormField(
-                          Name: "UserName",
-                          controller: userName,
-                        ),
-                        MyTextFormField(
-                          Name: "Email",
-                          controller: email,
-                        ),
-                        PasswordTextFormField(
-                          name: "Password",
-                          controller: password,
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            setState(() {
-                              obserText = !obserText;
-                            });
-                          },
-                          obscureText: obserText,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isMale = !isMale;
-                            });
-                          },
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: EdgeInsets.only(left: 10),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                              color: Colors.grey,
-                            )),
-                            child: Row(
-                              children: [
-                                Text(
-                                  isMale == true ? "Male" : "Female",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        MyTextFormField(
-                          Name: "Phone Number",
-                          controller: phoneNumber,
-                        ),
-                        MyTextFormField(
-                          Name: "Address",
-                          controller: address,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            validation();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.indigo,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                          ),
-                          child: Text(
-                            "Register",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "I have Already an Account! ",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              GestureDetector(
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => login(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                            fontSize: 16,
+                            color: Colors.black87,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: size.height * 0.01),
+                MyTextFormField(
+                  Name: "Phone Number",
+                  controller: phoneNumber,
+                ),
+                SizedBox(height: size.height * 0.01),
+                MyTextFormField(
+                  Name: "Address",
+                  controller: address,
+                ),
+                SizedBox(height: size.height * 0.01),
+                ElevatedButton(
+                  onPressed: () {
+                    validation();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.indigo,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                  ),
+                  child: Text(
+                    "Register",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "I have Already an Account! ",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      GestureDetector(
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 20,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => login(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(flex: 2),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

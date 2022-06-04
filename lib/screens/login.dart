@@ -93,91 +93,103 @@ class _loginState extends State<login> {
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Stack(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 300,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        MyTextFormField(
-                          Name: "Email",
-                          controller: email,
-                        ),
-                        PasswordTextFormField(
-                          name: "Password",
-                          controller: password,
-                          onTap: () {
-                            setState(() {
-                              obserText = !obserText;
-                            });
-                          },
-                          obscureText: obserText,
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  validation();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.indigo,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                ),
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "I have no Account! ",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    GestureDetector(
-                                      child: Text(
-                                        "Sign Up",
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) => Signup(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Spacer(
+                flex: 2,
               ),
+              Container(
+                alignment: Alignment.center, // This is needed
+                child: Image.asset(
+                  "assets/logo.png",
+                  fit: BoxFit.contain,
+                  width: 300,
+                ),
+              ),
+              // Image.asset("assets/logo.png", width: 300, height: 200),
+              Spacer(
+                flex: 1,
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 10, right: 10),
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    MyTextFormField(
+                      Name: "Email",
+                      controller: email,
+                    ),
+                    PasswordTextFormField(
+                      name: "Password",
+                      controller: password,
+                      onTap: () {
+                        setState(() {
+                          obserText = !obserText;
+                        });
+                      },
+                      obscureText: obserText,
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              validation();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.indigo,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                            ),
+                            child: Text(
+                              "Login",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "I have no Account! ",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                GestureDetector(
+                                  child: Text(
+                                    "Sign Up",
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => Signup(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Spacer(
+                flex: 4,
+              )
             ],
           ),
         ),

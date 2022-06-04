@@ -49,25 +49,31 @@ class _CheckOutState extends State<CheckOut> {
     );
     Widget signin = TextButton(
       child: Text("Yes"),
-      onPressed: () {
-        print("Product Order!!!");
-        FirebaseFirestore.instance.collection("Order").doc(user!.uid).set({
-          "Product": productProvider.checkOutModelList
+      onPressed: () async {
+        var _db = FirebaseFirestore.instance;
+        var orderDOc = await _db.collection("order").doc();
+
+        await _db.collection("order").doc(orderDOc.id).set({
+          "orderItems": productProvider.checkOutModelList
               .map((c) => {
-                    "Product Name": c.name,
-                    "Product Price": c.price,
-                    "Product Quantity": c.quantity,
-                    "Product Image": c.image,
-                    "Product Color": c.color,
-                    "Product Size": c.size,
+                    "productName": c.name,
+                    "productPrice": c.price,
+                    "productQuantity": c.quantity,
+                    "productImage": c.image,
+                    "productColor": c.color,
+                    "productSize": c.size,
                   })
               .toList(),
-          "Total Price": total.toStringAsFixed(2),
-          "UserName": e.UserName,
-          "UserEmail": e.UserEmail,
-          "UserAddress": e.UserAddress,
-          "UserUid": user!.uid,
+          "orderId": orderDOc.id,
+          "date": Timestamp.now(),
+          "totalPrice": total.toStringAsFixed(2),
+          "userName": e.UserName,
+          "userEmail": e.UserEmail,
+          "userAddress": e.UserAddress,
+          "userUid": user!.uid,
+          "isCompleted": false,
         });
+        print("Product Order!!! ${orderDOc.id}");
         productProvider.clearCheckoutProduct();
         productProvider.clearCartProduct();
         productProvider.addNotification("Notification");

@@ -8,6 +8,7 @@ class FavouriteSingleProduct extends StatefulWidget {
   final String image;
   final String color;
   final String size;
+  final String description;
   late String docId;
   final double price;
   int index;
@@ -20,6 +21,7 @@ class FavouriteSingleProduct extends StatefulWidget {
     required this.name,
     required this.price,
     required this.check,
+    required this.description,
     this.docId = "",
   });
 
@@ -53,6 +55,7 @@ class _FavouriteSingleProductState extends State<FavouriteSingleProduct> {
               price: widget.price,
               isColor: true,
               docId: widget.docId,
+              description: widget.description,
             ),
           ),
         );

@@ -39,13 +39,13 @@ class FavouriteProvider extends ChangeNotifier {
       db.docs.forEach((e) {
         Map<String, dynamic> data = e.data() as Map<String, dynamic>;
         favouriteModel = FavouriteModel(
-          image: data["Image"],
-          price: data["Price"],
-          color: data["Color"],
-          name: data["Name"],
-          size: data["Size"],
-          docId: data["DocId"],
-        );
+            image: data["Image"],
+            price: data["Price"],
+            color: data["Color"],
+            name: data["Name"],
+            size: data["Size"],
+            docId: data["DocId"],
+            description: data["productDescription"]);
         newList.add(favouriteModel);
       });
 

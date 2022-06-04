@@ -6,7 +6,12 @@ class SingleProduct extends StatelessWidget {
   String image;
   String name;
   double price;
-  SingleProduct({required this.name, required this.image, required this.price});
+  String description;
+  SingleProduct(
+      {this.description = "",
+      required this.name,
+      required this.image,
+      required this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +30,7 @@ class SingleProduct extends StatelessWidget {
                 image: image,
                 price: price,
                 isColor: false,
+                description: description,
               ),
             ),
           );

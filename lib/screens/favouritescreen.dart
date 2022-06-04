@@ -71,6 +71,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       color: favouriteProvider.favouriteModelList[index].color,
                       check: true,
                       index: index,
+                      description: favouriteProvider
+                          .favouriteModelList[index].description,
                       docId: favouriteProvider.favouriteModelList[index].docId,
                     );
                   });

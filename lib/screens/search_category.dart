@@ -42,6 +42,7 @@ class SearchCategory extends SearchDelegate<void> {
                 name: e.name,
                 image: e.image,
                 price: e.price,
+                description: e.description,
               ))
           .toList(),
     );
@@ -62,6 +63,7 @@ class SearchCategory extends SearchDelegate<void> {
                 name: e.name,
                 image: e.image,
                 price: e.price,
+                description: e.description,
               ))
           .toList(),
     );

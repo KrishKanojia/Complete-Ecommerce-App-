@@ -2,6 +2,7 @@ import 'package:ecommerce_app/provider/category_provider.dart';
 import 'package:ecommerce_app/provider/favourite_provider.dart';
 import 'package:ecommerce_app/provider/product_provider.dart';
 import 'package:ecommerce_app/screens/homepage.dart';
+import 'package:ecommerce_app/screens/splashscreen.dart';
 import 'package:ecommerce_app/screens/welcomescreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
 
               // Once complete, show your application
               if (snapshot.connectionState == ConnectionState.done) {
-                return Homepage();
+                return SplashScreen();
               }
 
               return Container();
