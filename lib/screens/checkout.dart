@@ -219,13 +219,14 @@ class _CheckOutState extends State<CheckOut> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        BottomDetail(
-                            "Your Price ", "\$ ${subTotal.toStringAsFixed(2)}"),
+                        BottomDetail("Your Price ",
+                            "Rs. ${subTotal.toStringAsFixed(2)}"),
                         BottomDetail(
                             "Discount", "${discount.toStringAsFixed(2)}%"),
                         BottomDetail(
-                            "Shipping", "\$ ${shipping.toStringAsFixed(2)}"),
-                        BottomDetail("Total", "\$ ${total.toStringAsFixed(2)}"),
+                            "Shipping", "Rs. ${shipping.toStringAsFixed(2)}"),
+                        BottomDetail(
+                            "Total", "Rs. ${total.toStringAsFixed(2)}"),
                       ],
                     ),
                   ),

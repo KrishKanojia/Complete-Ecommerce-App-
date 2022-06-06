@@ -298,25 +298,28 @@ class _DetailScreenState extends State<DetailScreen> {
                               height: 5,
                             ),
                             RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                    text: '${widget.price}',
+                              text: TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                    child: Transform.translate(
+                                      offset: const Offset(2, -8),
+                                      child: Text(
+                                        'Rs.',
+                                        //superscript is usually smaller in size
+                                        textScaleFactor: 1,
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: ' ${widget.price}',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 20,
-                                    )),
-                                WidgetSpan(
-                                  child: Transform.translate(
-                                    offset: const Offset(2, -8),
-                                    child: Text(
-                                      '\$',
-                                      //superscript is usually smaller in size
-                                      textScaleFactor: 1,
-                                      style: TextStyle(color: Colors.red),
                                     ),
                                   ),
-                                )
-                              ]),
+                                ],
+                              ),
                             ),
                             Text(
                               "Description",

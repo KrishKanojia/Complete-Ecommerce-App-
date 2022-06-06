@@ -117,7 +117,7 @@ class _CartSingleProductState extends State<CartSingleProduct> {
                         ],
                       ),
                     ),
-                    Text("\$ ${widget.price}", style: TextStyle(fontSize: 14)),
+                    Text("Rs. ${widget.price}", style: TextStyle(fontSize: 14)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [

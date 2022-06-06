@@ -518,7 +518,7 @@ class _HomepageState extends State<Homepage> {
                                     ),
                                   ),
                                   Text(
-                                    "\$ ${homeFeatures[index].price}",
+                                    "Rs. ${homeFeatures[index].price}",
                                     style: TextStyle(
                                       fontSize: 17,
                                       color: Colors.black,
@@ -651,7 +651,7 @@ class _HomepageState extends State<Homepage> {
                                   ),
                                 ),
                                 Text(
-                                  "\$ ${homeNewarchives[index].price}",
+                                  "Rs. ${homeNewarchives[index].price}",
                                   style: TextStyle(
                                     fontSize: 17,
                                     color: Colors.black,
@@ -797,6 +797,8 @@ class _HomepageState extends State<Homepage> {
                           name: slider[itemIndex]["name"].toString(),
                           image: "${slider[itemIndex]["image"].toString()}",
                           price: slider[itemIndex]["price"] as double,
+                          description:
+                              "The Macintosh (often called the Mac) was the first widely-sold personal computer with a graphical user interface (GUI) and a mouse. Apple Computer introduced the Macintosh in an ad during Super Bowl XVIII, on January 22, 1984, and offered it for sale two days later.",
                         ),
                       );
                     }),

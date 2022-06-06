@@ -89,7 +89,7 @@ class SingleProduct extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "\$ $price",
+                          "Rs. $price",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

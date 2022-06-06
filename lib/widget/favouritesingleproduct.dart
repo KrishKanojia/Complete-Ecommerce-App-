@@ -126,7 +126,7 @@ class _FavouriteSingleProductState extends State<FavouriteSingleProduct> {
                           ],
                         ),
                       ),
-                      Text("\$ ${widget.price}",
+                      Text("Rs. ${widget.price}",
                           style: TextStyle(fontSize: 14)),
                     ],
                   ),
